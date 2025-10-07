@@ -10,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
    public float moveSpeed = 1f;
 
    private Vector3 _movementDirection;
+   private Vector3 _cameraForward;
+   private Vector3 _cameraRight;
+   
+   
    
    public InputActionReference moveAction;
 
@@ -22,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
    private void Update()
    {
-      _movementDirection = playerCamera.transform.forward.normalized * moveAction.action.ReadValue<Vector2>().y + playerCamera.transform.right.normalized * moveAction.action.ReadValue<Vector2>().x;
+      CalculateMovementDirection();
       
    }
 
@@ -30,7 +34,21 @@ public class PlayerMovement : MonoBehaviour
    {
       _rb.AddForce((new Vector3(_movementDirection.x, 0 , _movementDirection.z) * moveSpeed), ForceMode.VelocityChange);
    }
-   
+
+
+   private void CalculateMovementDirection()
+   {
+      _cameraForward = playerCamera.transform.forward;
+      _cameraForward.y = 0;
+      _cameraForward.Normalize();
+      _cameraRight = playerCamera.transform.right;
+      _cameraRight.y = 0;
+      _cameraRight.Normalize();
+      _movementDirection = _cameraForward * moveAction.action.ReadValue<Vector2>().y + _cameraRight * moveAction.action.ReadValue<Vector2>().x;
+      _movementDirection.Normalize();
+      
+      Debug.Log(_rb.linearVelocity.magnitude);
+   }
    
    
    
