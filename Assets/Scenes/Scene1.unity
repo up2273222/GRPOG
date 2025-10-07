@@ -936,7 +936,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   playerCamera: {fileID: 640820729}
   moveSpeed: 1
+  jumpForce: 10
   moveAction: {fileID: 3357988786681845555, guid: dbcc66afb5595a24ab96834a2842ee75, type: 3}
+  jumpAction: {fileID: -7745350249989939162, guid: dbcc66afb5595a24ab96834a2842ee75, type: 3}
 --- !u!54 &1962101633
 Rigidbody:
   m_ObjectHideFlags: 0

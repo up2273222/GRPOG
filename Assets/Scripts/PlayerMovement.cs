@@ -6,8 +6,9 @@ public class PlayerMovement : MonoBehaviour
 {
    private Rigidbody _rb;
    public Camera playerCamera;
-   
-   public float moveSpeed = 1f;
+
+   public float moveSpeed;
+   public float jumpForce;
 
    private Vector3 _movementDirection;
    private Vector3 _cameraForward;
@@ -16,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
    
    
    public InputActionReference moveAction;
+   public InputActionReference jumpAction;
 
    private void Awake()
    {
@@ -24,10 +26,22 @@ public class PlayerMovement : MonoBehaviour
       Cursor.visible = false;
    }
 
+   private void OnEnable()
+   {
+      jumpAction.action.started += Jump;
+   }
+
+   private void OnDisable()
+   {
+      jumpAction.action.started -= Jump;
+   }
+
+  
+
    private void Update()
    {
       CalculateMovementDirection();
-      
+
    }
 
    private void FixedUpdate()
@@ -47,8 +61,26 @@ public class PlayerMovement : MonoBehaviour
       _movementDirection = _cameraForward * moveAction.action.ReadValue<Vector2>().y + _cameraRight * moveAction.action.ReadValue<Vector2>().x;
       _movementDirection.Normalize();
       
-      Debug.Log(_rb.linearVelocity.magnitude);
+     // Debug.Log(_rb.linearVelocity.magnitude);
+      
    }
+   
+   private void Jump(InputAction.CallbackContext obj)
+   {
+      if (IsGrounded())
+      {
+         _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+      }
+      
+   }
+
+   private bool IsGrounded()
+   {
+      Ray groundRay = new Ray(transform.position, Vector3.down);
+      return Physics.SphereCast(groundRay, 0.1f, 0.95f);
+   }
+   
+   
    
    
    
