@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
    private Vector3 _cameraForward;
    private Vector3 _cameraRight;
    
+   [SerializeField] private float airControlModifier = 0.2f;
+   
    
    
    public InputActionReference moveAction;
@@ -42,11 +44,20 @@ public class PlayerMovement : MonoBehaviour
    {
       CalculateMovementDirection();
 
+      _rb.linearDamping = IsGrounded() ? 4.0f : 0.5f;
    }
 
    private void FixedUpdate()
    {
-      _rb.AddForce((new Vector3(_movementDirection.x, 0 , _movementDirection.z) * moveSpeed), ForceMode.VelocityChange);
+      if (IsGrounded())
+      {
+         _rb.AddForce((new Vector3(_movementDirection.x, 0 , _movementDirection.z) * moveSpeed), ForceMode.VelocityChange);
+      }
+      else
+      {
+         _rb.AddForce(((new Vector3(_movementDirection.x, 0 , _movementDirection.z) * moveSpeed) * airControlModifier), ForceMode.VelocityChange);
+      }
+      
    }
 
 
